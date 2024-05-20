@@ -1,0 +1,268 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<title>com.betterbegreat.id-generator</title>
+	<meta charset="utf-8" />
+	<link rel="stylesheet" type="text/css" href="sdpi.css" />
+</head>
+
+<body>
+	<div>
+		<script>
+			/**
+			 * Copy text to clipboard
+			 * Note: This is a old way to copy text for backwards compatibility
+			 * 
+			 * @param {string} text 
+			 */
+			function copyTextToClipboard(text) {
+				const textArea = document.createElement('textarea');
+				textArea.value = text;
+				document.body.appendChild(textArea);
+				textArea.select();
+				document.execCommand('copy');
+				document.body.removeChild(textArea);
+			}
+
+			/**
+			 * Generate a random number of the exact digits length
+			 * 
+			 * @param {string} number 
+			 * @returns {string} Random number
+			 */
+			function generateRandomNumber(digits) {
+				let number = ""
+				for (let i = 0; i < digits; i++) {
+					number += Math.floor(Math.random() * 10);
+				}
+				return number;
+			}
+
+			/**
+			 * Generate a UUID v1
+			 * 
+			 * @returns {string} UUID v1
+			 */
+			function generateUuidV1() {
+				const timestamp = Date.now();
+				const timeLow = ((timestamp & 0xffffffff) >>> 0).toString(16).padStart(8, '0');
+				const timeMid = (((timestamp / 0x100000000) & 0xffff) >>> 0).toString(16).padStart(4, '0');
+				const timeHiAndVersion = ((((timestamp / 0x1000000000000) & 0xfff) >>> 0) | 0x1000).toString(16).padStart(4, '0');
+				const clockSeq = (Math.floor(Math.random() * 0x4000) | 0x8000).toString(16).padStart(4, '0');
+				const node = Array.from({ length: 6 }, () => Math.floor(Math.random() * 0xff).toString(16).padStart(2, '0')).join('');
+				return `${timeLow}-${timeMid}-${timeHiAndVersion}-${clockSeq}-${node}`;
+			}
+
+			/**
+			 * Generate a Random MAC address
+			 * 
+			 * @returns {string} MAC address
+			 */
+			function generateRandomMac() {
+				const hexDigits = "0123456789ABCDEF";
+				let macAddress = "";
+				for (let i = 0; i < 6; i++) {
+					let pair = "";
+					for (let j = 0; j < 2; j++) {
+						pair += hexDigits.charAt(Math.floor(Math.random() * hexDigits.length));
+					}
+					macAddress += pair + (i < 5 ? ":" : "");
+				}
+				return macAddress;
+			}
+
+			/**
+			 * Generate an IP address
+			 * 
+			 * @param {string} version - Options: v4, v6
+			 * @returns {string} IP address
+			 */
+			function generateRandomIp(version) {
+				if (version === 'v4') {
+					const getRandomOctet = () => Math.floor(Math.random() * 256);
+					return `${getRandomOctet()}.${getRandomOctet()}.${getRandomOctet()}.${getRandomOctet()}`;
+				} else if (version === 'v6') {
+					const getRandomHexGroup = () => Math.floor(Math.random() * 0x10000).toString(16).padStart(4, '0');
+					return `${getRandomHexGroup()}:${getRandomHexGroup()}:${getRandomHexGroup()}:${getRandomHexGroup()}:${getRandomHexGroup()}:${getRandomHexGroup()}:${getRandomHexGroup()}:${getRandomHexGroup()}`;
+				}
+			}
+
+			/**
+			 * Generate a random URN
+			 * 
+			 * @returns {string} URN
+			 */
+			function generateRandomUrn() {
+				const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+				const urnPrefix = 'urn:';
+				const namespaceLength = 5; // Length of the random namespace identifier
+				const nssLength = 20; // Length of the random namespace-specific string
+				const getRandomString = (length) => {
+					let result = '';
+					for (let i = 0; i < length; i++) {
+						result += chars.charAt(Math.floor(Math.random() * chars.length));
+					}
+					return result;
+				};
+				const namespace = getRandomString(namespaceLength);
+				const nss = getRandomString(nssLength);
+				return `${urnPrefix}${namespace}:${nss}`;
+			}
+
+			/**
+			 * Generate a random DOI
+			 * 
+			 * @returns {string} DOI
+			 */
+			function generateRandomDoi() {
+				const prefix = '10.';
+				const chars = '0123456789';
+				const suffixChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+				const randomDigits = (length) => {
+					let result = '';
+					for (let i = 0; i < length; i++) {
+						result += chars.charAt(Math.floor(Math.random() * chars.length));
+					}
+					return result;
+				};
+				const randomSuffix = (length) => {
+					let result = '';
+					for (let i = 0; i < length; i++) {
+						result += suffixChars.charAt(Math.floor(Math.random() * suffixChars.length));
+					}
+					return result;
+				};
+				const registrantCode = randomDigits(4);  // Random 4-digit registrant code
+				const suffix = randomSuffix(6);  // Random 6-character suffix
+				return `${prefix}${registrantCode}/${suffix}`;
+			}
+
+			/**
+			 * Generate a random OID
+			 * 
+			 * @returns {string} OID
+			 */
+			function generateRandomOid() {
+				const getRandomInt = (min, max) => {
+					return Math.floor(Math.random() * (max - min + 1)) + min;
+				};
+				const rootArcs = [0, 1, 2];
+				const subIdentifiersLength = getRandomInt(3, 10); // Length of the OID
+				let oid = [];
+				const root = rootArcs[getRandomInt(0, rootArcs.length - 1)];
+				oid.push(root);
+				if (root === 0 || root === 1) {
+					oid.push(getRandomInt(0, 39));
+				} else {
+					oid.push(getRandomInt(0, 999));
+				}
+				for (let i = 2; i < subIdentifiersLength; i++) {
+					oid.push(getRandomInt(0, 9999));
+				}
+				return oid.join('.');
+			}
+
+			/**
+			 * Generate an ID
+			 * 
+			 * @param {string} type - Options: random4, random8, random16, random32, uuidv1, uuidv4, mac, ipv4, ipv6, urn, doi, oid
+			 * @returns {string} ID
+			 */
+			function generateID(type) {
+				if (type === 'random4') return generateRandomNumber(4)
+				else if (type === 'random8') return generateRandomNumber(8)
+				else if (type === 'random16') return generateRandomNumber(16)
+				else if (type === 'random32') return generateRandomNumber(32)
+				else if (type === 'uuidv1') return generateUuidV1()
+				else if (type === 'uuidv4') return crypto.randomUUID()
+				else if (type === 'mac') return generateRandomMac()
+				else if (type === 'ipv4') return generateRandomIp('v4')
+				else if (type === 'ipv6') return generateRandomIp('v6')
+				else if (type === 'urn') return generateRandomUrn()
+				else if (type === 'doi') return generateRandomDoi()
+				else if (type === 'oid') return generateRandomOid()
+				else return crypto.randomUUID()
+			}
+
+			var websocket = null;
+			var pluginUUID = null;
+			var DestinationEnum = Object.freeze({ "HARDWARE_AND_SOFTWARE": 0, "HARDWARE_ONLY": 1, "SOFTWARE_ONLY": 2 })
+			var tileAction = {
+				type: "com.betterbegreat.id-generator.action",
+
+				onKeyUp: function (context, settings, coordinates, userDesiredState) {
+					try {
+						type = settings.type || 'uuidv4';
+						const id = generateID(type);
+						console.log("copy to clipboard:", id)
+						copyTextToClipboard(id);
+						this.showOk(context);
+					} catch (error) {
+						console.error("Error onKeyUp", error);
+						this.showAlert(context);
+					}
+				},
+				setSettings: function (context, settings) {
+					var json = {
+						"event": "setSettings",
+						"context": context,
+						"payload": settings
+					};
+
+					websocket.send(JSON.stringify(json));
+				},
+				showOk: function (context) {
+					var json =
+					{
+						"event": "showOk",
+						"context": context,
+					};
+
+					websocket.send(JSON.stringify(json));
+				},
+				showAlert: function (context) {
+					var json =
+					{
+						"event": "showAlert",
+						"context": context,
+					};
+
+					websocket.send(JSON.stringify(json));
+				}
+			};
+
+			function connectElgatoStreamDeckSocket(inPort, inPluginUUID, inRegisterEvent, inInfo) {
+				pluginUUID = inPluginUUID
+				websocket = new WebSocket("ws://127.0.0.1:" + inPort);
+				websocket.onopen = function () {
+					// WebSocket is connected, send message
+					var json = {
+						"event": inRegisterEvent,
+						"uuid": inPluginUUID
+					};
+					websocket.send(JSON.stringify(json));
+				};
+				websocket.onmessage = function (evt) {
+					// Received message from Stream Deck
+					const message = JSON.parse(event.data);
+					const { event: eventType, action, context, payload } = message;
+					const { settings, coordinates, userDesiredState, type } = payload || {};
+
+					if (eventType === "keyUp") {
+						tileAction.onKeyUp(context, settings, coordinates, userDesiredState);
+					} else if (eventType === "sendToPlugin") {
+						console.log("sendToPlugin", message);
+						if (type !== undefined) {
+							tileAction.setSettings(context, { "type": type });
+						}
+					}
+				};
+				websocket.onclose = function () {
+					// Websocket is closed
+				};
+			};
+		</script>
+</body>
+
+</html>

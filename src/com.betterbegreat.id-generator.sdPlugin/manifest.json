@@ -1,0 +1,43 @@
+{
+  "Actions": [
+    {
+      "Icon": "actionIcon", 
+      "Name": "ID Generator", 
+      "States": [
+        {
+          "Image": "actionDefaultImage",
+          "TitleAlignment": "bottom", 
+          "Title": "UUID v4",
+          "FontSize": "10"
+        }
+      ],
+      "SupportedInMultiActions": false,
+      "Tooltip": "Generate an ID and copy to clipboard.", 
+      "UUID": "com.betterbegreat.id-generator.action",
+	    "UserTitleEnabled": true
+    }
+  ], 
+  "SDKVersion": 2,
+  "Author": "Ingo Eichhorst", 
+  "CodePath": "code.html", 
+  "Description": "Generate an ID and copy to clipboard.", 
+  "Name": "ID Generator", 
+  "Icon": "pluginXl.png",
+  "PropertyInspectorPath": "pi.html",
+  "URL": "https://www.betterbegreat.com", 
+  "Version": "0.0.1",
+  "OS": [
+    {
+        "Platform": "mac", 
+        "MinimumVersion" : "10.11"
+    },
+    {
+        "Platform": "windows", 
+        "MinimumVersion" : "10"
+    }
+  ],
+  "Software": 
+    {
+        "MinimumVersion" : "4.1"
+    }
+}

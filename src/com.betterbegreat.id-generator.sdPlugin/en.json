@@ -1,0 +1,8 @@
+{
+  "Description": "Generate an ID and copy to clipboard.", 
+  "Name": "ID Generator", 
+  "com.betterbegreat.id-generator.action": {
+    "Name": "ID Generator", 
+    "Tooltip": "Generate an ID and copy to clipboard."
+  }
+}

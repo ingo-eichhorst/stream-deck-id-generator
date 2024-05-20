@@ -1,0 +1,8 @@
+{
+  "Description": "IDを生成してクリップボードにコピーする。", 
+  "Name": "ID Generator", 
+  "com.elgato.counter.action": {
+    "Name": "ID Generator", 
+    "Tooltip": "IDを生成してクリップボードにコピーする。"
+  }
+}

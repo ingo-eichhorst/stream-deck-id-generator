@@ -1,0 +1,8 @@
+{
+  "Description": "Gere uma ID e copie para a área de transferência.", 
+  "Name": "ID Generator", 
+  "com.elgato.counter.action": {
+    "Name": "ID Generator", 
+    "Tooltip": "Gere uma ID e copie para a área de transferência."
+  }
+}

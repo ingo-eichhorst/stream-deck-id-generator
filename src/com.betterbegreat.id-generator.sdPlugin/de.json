@@ -1,0 +1,8 @@
+{
+  "Description": "Generieren Sie eine ID und kopieren Sie sie in die Zwischenablage.", 
+  "Name": "ID Generator", 
+  "com.elgato.counter.action": {
+    "Name": "ID Generator", 
+    "Tooltip": "Generieren Sie eine ID und kopieren Sie sie in die Zwischenablage."
+  }
+}

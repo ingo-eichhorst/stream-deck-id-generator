@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>com.elgato.philips-hue.pi</title>
+  <meta charset="UTF-8" />
+  <link rel="stylesheet" type="text/css" href="sdpi.css" />
+</head>
+
+<body>
+  <div class="sdpi-wrapper">
+    <div class="sdpi-item" id="select_single">
+      <div class="sdpi-item-label">ID Type</div>
+      <select class="sdpi-item-value select" id="type-selector" onchange="sendValueToPlugin(event.target.value, 'type')">
+        <option value="random4">4 Digit Random Number</option>
+        <option value="random8">8 Digit Random Number</option>
+        <option value="random16">16 Digit Random Number</option>
+        <option value="random32">32 Digit Random Number</option>
+        <option value="uuidv1">UUID v1 (Time-based)</option>
+        <option value="uuidv4" selected>UUID v4 (Random, Default)</option>
+        <option value="mac">MAC address</option>
+        <option value="ipv4">IP v4</option>
+        <option value="ipv6">IP v6</option>
+        <option value="urn">URN (Uniform Resource Name)</option>
+        <option value="doi">DOI (Digital Object Identifier)</option>
+        <option value="oid">OID (Object Identifier)</option>
+      </select>
+    </div>
+    <p id="debugger"></p>
+  </div>
+
+  <script>
+    var websocket = null,
+      uuid = null,
+      actionInfo = {};
+
+    /**
+     * Helper function to log text in the PI
+     * 
+     * @param {string} text - Text to log
+     */
+    function log(text) {
+      if (typeof text === 'object') {
+        text = JSON.stringify(text, null, 2);
+      }
+      const paragraphElement = document.getElementById('debugger');
+      if (paragraphElement) {
+        paragraphElement.textContent = text;
+      } else {
+        console.error(`Paragraph element with ID '${paragraphId}' not found.`);
+      }
+    }
+
+    /**
+     * Select a value in a dropdown
+     * 
+     * @param {string} dropdownId - ID of the dropdown
+     * @param {string} newValue - Value to select
+     */
+    function selectDropdownValue(dropdownId, newValue) {
+      const dropdown = document.getElementById(dropdownId);
+      if (dropdown) {
+        const options = dropdown.options;
+        for (let i = 0; i < options.length; i++) {
+          if (options[i].value === newValue) {
+            dropdown.selectedIndex = i;
+            dropdown.dispatchEvent(new Event('change'));
+            return;
+          }
+        }
+        console.error(`Value '${newValue}' not found in the dropdown.`);
+      } else {
+        console.error(`Dropdown with ID '${dropdownId}' not found.`);
+      }
+    }
+
+    /**
+     * Send a value to the plugin so the plugin code can work with it
+     * 
+     * @param {string} value - Value to send
+     * @param {string} param - Parameter to send
+     */
+     function sendValueToPlugin(value, param) {
+      console.log('sendValueToPlugin', value, param);
+      if (websocket) {
+        const json = {
+          "action": actionInfo['action'],
+          "event": "sendToPlugin",
+          "context": uuid,
+          "payload": {
+            [param]: value
+          }
+        };
+        websocket.send(JSON.stringify(json));
+      }
+    }
+
+    /**
+     * Function called by the Stream Deck software, passing the websocket and the action info
+     * 
+     * @param {number} inPort - Port to use
+     * @param {string} inUUID - UUID of the action
+     * @param {string} inRegisterEvent - Register event
+     * @param {string} inInfo - Information
+     * @param {string} inActionInfo - Action information
+     */
+    function connectElgatoStreamDeckSocket(inPort, inUUID, inRegisterEvent, inInfo, inActionInfo) {
+      uuid = inUUID;
+      actionInfo = JSON.parse(inActionInfo)
+      websocket = new WebSocket('ws://localhost:' + inPort);
+
+      // Note: This can be used for debugging
+      // log(actionInfo)
+
+      // set the correct dropdoen item
+      if(actionInfo.payload && actionInfo.payload.settings && actionInfo.payload.settings.type) {
+        selectDropdownValue("type-selector", actionInfo.payload.settings.type);
+      } else {
+        selectDropdownValue("type-selector", "uuidv4");
+      }
+
+      websocket.onopen = function () {
+        var json = {
+          event: inRegisterEvent,
+          uuid: inUUID
+        };
+        websocket.send(JSON.stringify(json));
+      }
+
+    }
+  </script>
+</body>
+
+</html>

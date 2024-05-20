@@ -1,0 +1,8 @@
+{
+  "Description": "生成ID并复制到剪贴板。", 
+  "Name": "ID生成器", 
+  "com.elgato.counter.action": {
+    "Name": "ID生成器", 
+    "Tooltip": "生成ID并复制到剪贴板。"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "Description": "Genera una ID y cópiala al portapapeles.", 
+  "Name": "ID Generator", 
+  "com.elgato.counter.action": {
+    "Name": "ID Generator", 
+    "Tooltip": "Genera una ID y cópiala al portapapeles."
+  }
+}

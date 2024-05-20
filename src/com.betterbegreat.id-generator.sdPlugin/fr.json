@@ -1,0 +1,8 @@
+{
+  "Description": "Générez un ID et copiez-le dans le presse-papiers.", 
+  "Name": "ID Generator", 
+  "com.elgato.counter.action": {
+    "Name": "ID Generator", 
+    "Tooltip": "Générez un ID et copiez-le dans le presse-papiers."
+  }
+}
